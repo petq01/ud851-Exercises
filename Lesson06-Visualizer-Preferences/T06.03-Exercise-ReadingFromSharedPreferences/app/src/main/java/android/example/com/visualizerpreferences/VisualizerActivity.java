@@ -18,11 +18,14 @@ package android.example.com.visualizerpreferences;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.example.com.visualizerpreferences.AudioVisuals.AudioInputReader;
 import android.example.com.visualizerpreferences.AudioVisuals.VisualizerView;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -42,14 +45,16 @@ public class VisualizerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visualizer);
         mVisualizerView = (VisualizerView) findViewById(R.id.activity_visualizer);
-        defaultSetup();
+        setupSharedPreferences();
         setupPermissions();
     }
 
     // TODO (1) Change the name of default setup to setupSharedPreferences
-    private void defaultSetup() {
+    private void setupSharedPreferences() {
         // TODO (2) Get a reference to the default shared preferences from the PreferenceManager class
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         // TODO (3) Get the value of the show_bass checkbox preference and use it to call setShowBass
+        mVisualizerView.setShowBass(sharedPreferences.getBoolean("show_bass", true));
         mVisualizerView.setShowBass(true);
         mVisualizerView.setShowMid(true);
         mVisualizerView.setShowTreble(true);
@@ -104,7 +109,7 @@ public class VisualizerActivity extends AppCompatActivity {
             mAudioInputReader.restart();
         }
     }
-    
+
     /**
      * App Permissions for Audio
      **/
@@ -114,7 +119,7 @@ public class VisualizerActivity extends AppCompatActivity {
             // And if we're on SDK M or later...
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 // Ask again, nicely, for the permissions.
-                String[] permissionsWeNeed = new String[]{ Manifest.permission.RECORD_AUDIO };
+                String[] permissionsWeNeed = new String[]{Manifest.permission.RECORD_AUDIO};
                 requestPermissions(permissionsWeNeed, MY_PERMISSION_RECORD_AUDIO_REQUEST_CODE);
             }
         } else {

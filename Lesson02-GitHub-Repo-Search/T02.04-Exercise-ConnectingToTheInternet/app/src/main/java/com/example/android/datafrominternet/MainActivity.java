@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.example.android.datafrominternet.utilities.NetworkUtils;
 
+import java.io.IOException;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
@@ -56,6 +57,12 @@ public class MainActivity extends AppCompatActivity {
         URL githubSearchUrl = NetworkUtils.buildUrl(githubQuery);
         mUrlDisplayTextView.setText(githubSearchUrl.toString());
         // TODO (2) Call getResponseFromHttpUrl and display the results in mSearchResultsTextView
+        try {
+            URL textEditResult = new URL(mSearchBoxEditText.getText().toString());
+            mSearchResultsTextView.setText(NetworkUtils.getResponseFromHttpUrl(textEditResult).toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         // TODO (3) Surround the call to getResponseFromHttpUrl with a try / catch block to catch an IOException
     }
 
